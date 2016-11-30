@@ -53,29 +53,29 @@ WriteLog  "Disabling IPv6"
 cmd.exe /c '%windir%\System32\reg.exe ADD HKLM\SYSTEM\CurrentControlSet\services\TCPIP6\Parameters /v DisabledComponents /t REG_DWORD /d 0xffffffff /f' 
 
 WriteLog "Enabling Remote Desktop"
-Set-ItemProperty ìHKLM:\SYSTEM\CurrentControlSet\Control\Terminal Serverî -Name ìfDenyTSConnectionsî -Value 0
+Set-ItemProperty ‚ÄúHKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server‚Äù -Name ‚ÄúfDenyTSConnections‚Äù -Value 0
 
 WriteLog "Setting small memory dump"
 gwmi Win32_OSRecoveryConfiguration -EnableAllPrivileges | swmi -Arguments @{DebugInfoType=1}
 
-WriteLog "Adding hfx_admin"
-cmd.exe /c 'net user hfx_admin hfx!!3333 /add /fullname:"Heraflux Admin"'
+WriteLog "Adding user"
+cmd.exe /c 'net user admin Admin101 /add /fullname:"Heraflux Admin"'
 
-WriteLog "Adding hfx_admin to Local Administrators"
-cmd.exe /c 'net localgroup Administrators hfx_admin /add'
+WriteLog "Adding user to Local Administrators"
+cmd.exe /c 'net localgroup Administrators admin /add'
 
-WriteLog "Adding hfx_admin to Remote Desktop Users"
-cmd.exe /c 'net localgroup "Remote Desktop Users" hfx_admin /add'
+WriteLog "Adding user to Remote Desktop Users"
+cmd.exe /c 'net localgroup "Remote Desktop Users" admin /add'
 
-WriteLog  "Setting hfx_admin password to not expire"
-$user = [adsi]"WinNT://$env:computername/hfx_admin"
+WriteLog  "Setting user password to not expire"
+$user = [adsi]"WinNT://$env:computername/admin"
 $user.UserFlags.value = $user.UserFlags.value -bor 0x10000
 $user.CommitChanges()
 
 WriteLog "Setting Autologon"
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "AutoAdminLogon" -Value "0x00000001" -Type DWORD ;
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "DefaultUserName" -Value "hfx_admin" ;
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "DefaultPassword" -Value "hfx!!3333" ;
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "DefaultUserName" -Value "admin" ;
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "DefaultPassword" -Value "Admin101" ;
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name "WindowsUpdateAutoUpdater" -Value "$WSUS" ;
 
 exit
