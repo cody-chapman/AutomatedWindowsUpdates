@@ -8,7 +8,7 @@ Function RemoveAutologon {
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "DefaultUserName";
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "DefaultPassword" ;
 	Remove-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name "WindowsUpdateAutoUpdater" ;
-    shutdown /f /l /t 0
+    shutdown /f /l
 }
 Start-Sleep -s 25
 
