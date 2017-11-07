@@ -4,38 +4,10 @@ Function WriteLog($string, $color)
    write-host $string -foregroundcolor $color
  }
 
-Import-Module ServerManager
+
 
 $ScriptPath = (Split-Path ((Get-Variable MyInvocation).Value).MyCommand.Path) 
 $WSUS = $ScriptPath + "\WSUS.bat"
-
-WriteLog "Disabling Server Manager from launching every login"
-schtasks /change /tn '\Microsoft\Windows\Server Manager\ServerManager' /disable
-
-WriteLog "Installing Web-Server"  
-Add-WindowsFeature -Name Web-Server -IncludeAllSubFeature
-
-WriteLog "Installing Application-Server"  
-Add-WindowsFeature -Name Application-Server -IncludeAllSubFeature
-
-WriteLog  "Installing SMTP-Server"
-Add-WindowsFeature -Name SMTP-Server -IncludeAllSubFeature
-WriteLog  "Setting SMTP Startup to Automatic" 
-Set-Service "SMTPSVC" -StartupType Automatic
-
-WriteLog "Installing Qwave"
-Add-WindowsFeature -Name qwave -IncludeAllSubFeature
-Set-Service "qwave" -StartupType Automatic
-
-
-WriteLog  "IE Enhanced Security Configuration (ESC) has been disabled."
-$AdminKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A7-37EF-4b3f-8CFC-4F3A74704073}" 
-
-$UserKey = "HKLM:\SOFTWARE\Microsoft\Active Setup\Installed Components\{A509B1A8-37EF-4b3f-8CFC-4F3A74704073}" 
-
-Set-ItemProperty -Path $AdminKey -Name "IsInstalled" -Value 0  
-
-Set-ItemProperty -Path $UserKey -Name "IsInstalled" -Value 0  
 
 WriteLog "Disabling Firewall"
 netsh advfirewall set allprofiles state off
@@ -59,7 +31,7 @@ WriteLog "Setting small memory dump"
 gwmi Win32_OSRecoveryConfiguration -EnableAllPrivileges | swmi -Arguments @{DebugInfoType=1}
 
 WriteLog "Adding user"
-cmd.exe /c 'net user admin Admin101 /add /fullname:"Heraflux Admin"'
+cmd.exe /c 'net user admin Password1 /add /fullname:"Admin"'
 
 WriteLog "Adding user to Local Administrators"
 cmd.exe /c 'net localgroup Administrators admin /add'
@@ -75,7 +47,7 @@ $user.CommitChanges()
 WriteLog "Setting Autologon"
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "AutoAdminLogon" -Value "0x00000001" -Type DWORD ;
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "DefaultUserName" -Value "admin" ;
-Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "DefaultPassword" -Value "Admin101" ;
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -Name "DefaultPassword" -Value "Pasword1" ;
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" -Name "WindowsUpdateAutoUpdater" -Value "$WSUS" ;
 
 exit
