@@ -4,6 +4,7 @@ Function WriteLog($string, $color) {
 }
 
 
+
 $ScriptPath = (Split-Path ((Get-Variable MyInvocation).Value).MyCommand.Path) 
 $WSUS = $ScriptPath + "\WSUS.bat"
 
