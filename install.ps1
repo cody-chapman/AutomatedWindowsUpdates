@@ -1,8 +1,7 @@
-Function WriteLog($string, $color)
-{
-   if ($Color -eq $null) {$color = "Green"}
-   write-host $string -foregroundcolor $color
- }
+Function WriteLog($string, $color) {
+    if ($Color -eq $null) {$color = "Green"}
+    write-host $string -foregroundcolor $color
+}
 
 
 $ScriptPath = (Split-Path ((Get-Variable MyInvocation).Value).MyCommand.Path) 
@@ -27,7 +26,7 @@ WriteLog "Enabling Remote Desktop"
 Set-ItemProperty “HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server” -Name “fDenyTSConnections” -Value 0
 
 WriteLog "Setting small memory dump"
-gwmi Win32_OSRecoveryConfiguration -EnableAllPrivileges | swmi -Arguments @{DebugInfoType=1}
+Get-WmiObject Win32_OSRecoveryConfiguration -EnableAllPrivileges | Set-WmiInstance -Arguments @{DebugInfoType = 1}
 
 WriteLog "Adding user"
 cmd.exe /c 'net user admin Password1 /add /fullname:"Admin"'
